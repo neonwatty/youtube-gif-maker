@@ -1,5 +1,6 @@
 import re
 from typing import Tuple
+import itertools
 
 
 def clean_word(text: str) -> str:
@@ -40,7 +41,7 @@ def chunk_text(text_split: list,
         if len(text_split[left_pointer:]) > 0:
             last_chunk = text_split[left_pointer:]
             chunks.append(" ".join(last_chunk))
-            pointers.append([left_pointer, len(text_split)])
+            pointers.append([left_pointer, len(text_split)-1])
     return chunks, pointers
 
 
@@ -53,11 +54,13 @@ def create_all(query: str,
         query_word_length = len(query_split)
         all_chunks = []
         all_pointers = []
-        for chunk_size in range(max(1, query_word_length - 1), min(len(text_split), query_word_length + 1)):
+        for chunk_size in range(max(2, query_word_length - 1), min(len(text_split), query_word_length + 1)):
             chunks, pointers = chunk_text(text_split, chunk_size)
             all_chunks.append(chunks)
             all_pointers.append(pointers)
-            
+
+        all_chunks = list(itertools.chain.from_iterable(all_chunks))
+        all_pointers = list(itertools.chain.from_iterable(all_pointers))
         print("SUCCESS: create_all ran successfully")
         return all_chunks, all_pointers
     except Exception as e:
