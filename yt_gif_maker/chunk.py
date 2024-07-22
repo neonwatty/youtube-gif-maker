@@ -10,7 +10,7 @@ def clean_word(text: str) -> str:
 
 def chunk_text(text_split: list,
                chunk_size: int = 4,
-               overlap_size: int = 1) -> Tuple[list, list]:
+               overlap_size: int = 3) -> Tuple[list, list]:
     # create next chunk by moving right pointer until chunk_size is reached or line_number changes by more than 1 or end of word_sequence is reached
     left_pointer = 0
     right_pointer = chunk_size - 1
@@ -55,7 +55,7 @@ def create_all(query: str,
         all_chunks = []
         all_pointers = []
         for chunk_size in range(max(2, query_word_length - 1), min(len(text_split), query_word_length + 1)):
-            chunks, pointers = chunk_text(text_split, chunk_size)
+            chunks, pointers = chunk_text(text_split, chunk_size=chunk_size, overlap_size = chunk_size - 1)
             all_chunks.append(chunks)
             all_pointers.append(pointers)
 
