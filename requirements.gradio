@@ -1,4 +1,9 @@
 whisper-timestamped
 moviepy
 yt-dlp
+numpy
+matplotlib
+torch
+transformers
+sentence-transformers
 gradio
