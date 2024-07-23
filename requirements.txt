@@ -2,9 +2,8 @@ whisper-timestamped
 moviepy
 yt-dlp
 numpy
-matplotlib
 pillow
 torch
 transformers
 sentence-transformers
-gradio
+streamlit
