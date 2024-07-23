@@ -70,7 +70,6 @@ with tab1:
         phrase: list,
         upload_url: str,
     ):
-        temporary_audio_location = temporary_video_location.replace("mp4", "mp3")
 
         if trans_button_val:
             download_video(upload_url, temporary_video_location)
@@ -84,8 +83,7 @@ with tab1:
                         st.video(temporary_video_location)
                 out.close()
 
-            extract_audio(temporary_video_location, temporary_audio_location)
-            transcript, timestamped_transcript = transcribe(local_file_path=temporary_audio_location, model=model_selection)
+            transcript, timestamped_words  = transcribe(video_file_path=temporary_video_location, model=model_selection)
 
             with col0.container(border=True):
                 st.text_area(
@@ -106,8 +104,7 @@ with tab1:
                         st.video(temporary_video_location)
                 out.close()
 
-            extract_audio(temporary_video_location, temporary_audio_location)
-            transcript, timestamped_transcript = transcribe(local_file_path=temporary_audio_location, model=model_selection)
+            transcript, timestamped_words  = transcribe(video_file_path=temporary_video_location, model=model_selection)
 
             with col0.container(border=True):
                 st.text_area(
@@ -116,18 +113,7 @@ with tab1:
                     label="transcribe text",
                 )
 
-            bleep_replace(
-                temporary_video_location,
-                temporary_audio_location,
-                bleep_video_output,
-                bleep_audio_output,
-                bleep_word_list,
-                timestamped_transcript,
-            )
 
-            with colo2:
-                st.caption("bleeped video")
-                st.video(bleep_video_output)
 
     with tempfile.TemporaryDirectory() as tmpdirname:
         temporary_video_location = tmpdirname + "/original_" + str(uuid.uuid4()) + ".mp4"
