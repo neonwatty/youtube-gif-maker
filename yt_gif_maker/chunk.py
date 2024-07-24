@@ -8,9 +8,7 @@ def clean_word(text: str) -> str:
     return re.sub(" +", " ", re.compile("[^a-z0-9,.!?']").sub(" ", text.lower().strip()))
 
 
-def chunk_text(text_split: list,
-               chunk_size: int = 4,
-               overlap_size: int = 3) -> Tuple[list, list]:
+def chunk_text(text_split: list, chunk_size: int = 4, overlap_size: int = 3) -> Tuple[list, list]:
     # create next chunk by moving right pointer until chunk_size is reached or line_number changes by more than 1 or end of word_sequence is reached
     left_pointer = 0
     right_pointer = chunk_size - 1
@@ -24,7 +22,7 @@ def chunk_text(text_split: list,
         while right_pointer < len(text_split):
             # check if chunk_size has been reached
             # create chunk
-            chunk = text_split[left_pointer: right_pointer + 1]
+            chunk = text_split[left_pointer : right_pointer + 1]
             pointer_duo = [left_pointer, right_pointer]
 
             # move left pointer
@@ -41,12 +39,11 @@ def chunk_text(text_split: list,
         if len(text_split[left_pointer:]) > 0:
             last_chunk = text_split[left_pointer:]
             chunks.append(" ".join(last_chunk))
-            pointers.append([left_pointer, len(text_split)-1])
+            pointers.append([left_pointer, len(text_split) - 1])
     return chunks, pointers
 
 
-def create_all(query: str,
-               transcript: str) -> Tuple[list, list]:
+def create_all(query: str, transcript: str) -> Tuple[list, list]:
     try:
         print("STARTING: create_all")
         text_split = clean_word(transcript).split(" ")
@@ -55,7 +52,7 @@ def create_all(query: str,
         all_chunks = []
         all_pointers = []
         for chunk_size in range(max(2, query_word_length - 1), min(len(text_split), query_word_length + 1)):
-            chunks, pointers = chunk_text(text_split, chunk_size=chunk_size, overlap_size = chunk_size - 1)
+            chunks, pointers = chunk_text(text_split, chunk_size=chunk_size, overlap_size=chunk_size - 1)
             all_chunks.append(chunks)
             all_pointers.append(pointers)
 

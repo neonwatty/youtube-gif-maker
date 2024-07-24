@@ -23,7 +23,7 @@ def create_result_time_range(timestamped_words: list, closest_pointers: list):
 
         start_time = int(start_word["start"] * 1000) - 50
         end_time = int(end_word["end"] * 1000) + 50
-        
+
         time_range = [start_time, end_time]
         time_ranges.append(time_range)
     return time_ranges

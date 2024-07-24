@@ -10,7 +10,7 @@ def process():
     query = "fang it fang it"
     transcript, timestamped_words = transcribe(video_file_path, model="base")
 
-    closest_time_ranges = get_nearest_snippets(query, transcript, timestamped_words) 
+    closest_time_ranges = get_nearest_snippets(query, transcript, timestamped_words)
 
     output_clip_path = "test.mp4"
     output_gif_path = "test.gif"
@@ -22,6 +22,7 @@ def process():
     output_gif_path = "test_with_writing.gif"
     text = "HEY LOOK MOM NO HANDS"
     draw_on_gif(input_gif_path, output_gif_path, text)
-    
-if __name__ =="__main__":
+
+
+if __name__ == "__main__":
     process()

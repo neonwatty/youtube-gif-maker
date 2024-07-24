@@ -3,17 +3,13 @@ from PIL import Image, ImageDraw, ImageSequence
 import io
 
 
-def clip_video_and_gif(video_file_path: str, 
-                       output_clip_path: str,
-                       output_gif_path: str,
-                       start_ms: int, 
-                       end_ms: int):
+def clip_video_and_gif(video_file_path: str, output_clip_path: str, output_gif_path: str, start_ms: int, end_ms: int):
     start_time = start_ms / 1000.0
     end_time = end_ms / 1000.0
     video = VideoFileClip(video_file_path)
     subclip = video.subclip(start_time, end_time)
     subclip.write_videofile(output_clip_path, codec="libx264", audio_codec="aac")
-    video.write_gif(output_gif_path,fps=25, program='ffmpeg')
+    video.write_gif(output_gif_path, fps=25, program="ffmpeg")
     video.close()
 
 
@@ -26,7 +22,7 @@ def draw_on_gif(input_gif_path: str, output_gif_path: str, text) -> None:
     for frame in ImageSequence.Iterator(im):
         # Draw the text on the frame
         d = ImageDraw.Draw(frame)
-        d.text((10,100), text)
+        d.text((10, 100), text)
         del d
 
         # However, 'frame' is still the animated image with many frames

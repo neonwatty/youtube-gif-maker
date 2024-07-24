@@ -35,13 +35,12 @@ def fetch_logic(upload_url: str, temporary_video_location: str):
                     st.video(temporary_video_location)
                 out.close()
         yt_transcript = get_single_transcript(upload_url)
-        
+
         st.session_state.yt_transcript_text = yt_transcript
-        
+
         all_text = yt_transcript["transcript"]
         all_text = " ".join([v["text"] for v in all_text])
-        
-        
+
         st.session_state.yt_just_transcript_text = all_text
 
 
@@ -67,15 +66,10 @@ with tab2:
 
 with tab1:
     with st.container(border=True):
-        upload_url = st.text_input(
-            label="YouTube / Shorts url",
-            value = st.session_state.upload_url
+        upload_url = st.text_input(label="YouTube / Shorts url", value=st.session_state.upload_url)
+        yt_fetch_button = st.button(
+            label="fetch video", type="secondary", on_click=fetch_logic, args=(st.session_state.upload_url, st.session_state.temporary_video_location)
         )
-        yt_fetch_button = st.button(label="fetch video", 
-                                    type="secondary", 
-                                    on_click=fetch_logic,
-                                    args=(st.session_state.upload_url,
-                                          st.session_state.temporary_video_location))
 
     with st.container(border=True):
         col_yt_trans, col_yt_whisper = st.columns([4, 4])
@@ -85,7 +79,7 @@ with tab1:
                 placeholder="YouTube transcript will appear here if it exists",
                 label="YouTube's transcript",
             )
-            
+
         with col_yt_whisper.container(border=True):
             yt_whisper_text_area = st.text_area(
                 value="",
@@ -141,7 +135,7 @@ with tab1:
                         st.video(temporary_video_location)
                     out.close()
 
-            transcript, timestamped_words  = transcribe(video_file_path=temporary_video_location, model=model_selection)
+            transcript, timestamped_words = transcribe(video_file_path=temporary_video_location, model=model_selection)
 
             with col0.container(border=True):
                 st.text_area(
@@ -151,9 +145,9 @@ with tab1:
                 )
 
         if clip_button_val:
-            transcript, timestamped_words  = transcribe(video_file_path=temporary_video_location, model=model_selection)
-            closest_time_ranges = get_nearest_snippets(input_phrase, transcript, timestamped_words) 
-            
+            transcript, timestamped_words = transcribe(video_file_path=temporary_video_location, model=model_selection)
+            closest_time_ranges = get_nearest_snippets(input_phrase, transcript, timestamped_words)
+
             output_clip_path = temporary_video_location[:-4] + "_clip_1.mp4"
             output_gif_path = temporary_video_location[:-4] + "_clip_1.gif"
             start_ms = closest_time_ranges[0][0]
@@ -166,7 +160,7 @@ with tab1:
                     placeholder="transcribe text will be shown here",
                     label="transcribe text",
                 )
-                
+
             c00, c01, c02 = st.columns([8, 8, 8])
             filename = open(output_clip_path, "rb")
             byte_file = io.BytesIO(filename.read())
@@ -177,8 +171,7 @@ with tab1:
                         st.caption("clip 1 video")
                         st.video(output_clip_path)
                     out.close()
-                    
-                       
+
             filename = open(output_gif_path, "rb")
             byte_file = io.BytesIO(filename.read())
             with open(temporary_video_location, "wb") as out:
@@ -188,15 +181,10 @@ with tab1:
                         st.caption("clip 1 gif")
                         st.image(output_gif_path)
                     out.close()
-                    
+
                     with open(output_gif_path, "rb") as file:
-                        st.download_button(
-                            label="Download gif",
-                            data=file,
-                            file_name="clip_1.gif",
-                            mime="image/gif"
-                        )
-                        
+                        st.download_button(label="Download gif", data=file, file_name="clip_1.gif", mime="image/gif")
+
                         # file_ = open(output_gif_path, "rb")
                         # contents = file_.read()
                         # data_url = base64.b64encode(contents).decode("utf-8")
@@ -205,12 +193,10 @@ with tab1:
                         #     f'<img src="data:image/gif;base64,{data_url}" alt="clip 1 gif">',
                         #     unsafe_allow_html=True,
                         # )
-    
-                    out.close()
 
+                    out.close()
 
     with tempfile.TemporaryDirectory() as tmpdirname:
         st.session_state.temporary_video_location = tmpdirname + "/original_" + str(uuid.uuid4()) + ".mp4"
 
-        
         # button_logic(temporary_video_location, model_selection, input_phrase, upload_url)
