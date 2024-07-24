@@ -2,12 +2,48 @@ import streamlit as st
 from yt_gif_maker.transcribe import avaliable_models
 from yt_gif_maker.transcribe import transcribe
 from yt_gif_maker.yt_download import download_video
+from yt_gif_maker.yt_transcript import get_single_transcript
 from yt_gif_maker.nearest import get_nearest_snippets
 from yt_gif_maker.gif_maker import clip_video_and_gif, draw_on_gif
 import base64
 import tempfile
 import uuid
 import io
+
+
+# Initialization
+if "yt_transcript_text" not in st.session_state:
+    st.session_state.yt_transcript_text = ""
+if "yt_just_transcript_text" not in st.session_state:
+    st.session_state.yt_just_transcript_text = ""
+if "temporary_video_location" not in st.session_state:
+    st.session_state.temporary_video_location = ""
+if "upload_url" not in st.session_state:
+    st.session_state.upload_url = "https://www.youtube.com/shorts/43BhDHYBG0o"
+
+
+def fetch_logic(upload_url: str, temporary_video_location: str):
+    if yt_fetch_button:
+        download_video(upload_url, temporary_video_location)
+        filename = open(temporary_video_location, "rb")
+        byte_file = io.BytesIO(filename.read())
+        with open(temporary_video_location, "wb") as out:
+            out.write(byte_file.read())
+            with col_orig_video:
+                with st.container(border=True):
+                    st.caption("original video")
+                    st.video(temporary_video_location)
+                out.close()
+        yt_transcript = get_single_transcript(upload_url)
+        
+        st.session_state.yt_transcript_text = yt_transcript
+        
+        all_text = yt_transcript["transcript"]
+        all_text = " ".join([v["text"] for v in all_text])
+        
+        
+        st.session_state.yt_just_transcript_text = all_text
+
 
 app_name = "YouTube gif maker"
 st.set_page_config(page_title=app_name)
@@ -33,8 +69,29 @@ with tab1:
     with st.container(border=True):
         upload_url = st.text_input(
             label="YouTube / Shorts url",
-            value="https://www.youtube.com/shorts/43BhDHYBG0o",
+            value = st.session_state.upload_url
         )
+        yt_fetch_button = st.button(label="fetch video", 
+                                    type="secondary", 
+                                    on_click=fetch_logic,
+                                    args=(st.session_state.upload_url,
+                                          st.session_state.temporary_video_location))
+
+    with st.container(border=True):
+        col_yt_trans, col_yt_whisper = st.columns([4, 4])
+        with col_yt_trans.container(border=True):
+            yt_trans_text_area = st.text_area(
+                value=st.session_state.yt_just_transcript_text,
+                placeholder="YouTube transcript will appear here if it exists",
+                label="YouTube's transcript",
+            )
+            
+        with col_yt_whisper.container(border=True):
+            yt_whisper_text_area = st.text_area(
+                value="",
+                placeholder="Whisper transcript will appear here if you create it",
+                label="Whisper transcript",
+            )
 
     with st.container(border=True):
         col1, col2, col3 = st.columns([8, 3, 4])
@@ -64,6 +121,7 @@ with tab1:
 
     a, col0, b = st.columns([1, 20, 1])
     colo1, colo2 = st.columns([3, 3])
+    col_empty_1, col_orig_video, col_empty_2 = st.columns([4, 8, 4])
 
     def button_logic(
         temporary_video_location: str,
@@ -71,8 +129,6 @@ with tab1:
         input_phrase: list,
         upload_url: str,
     ):
-        col_empty_1, col_orig_video, col_empty_2 = st.columns([4, 8, 4])
-
         if trans_button_val:
             download_video(upload_url, temporary_video_location)
             filename = open(temporary_video_location, "rb")
@@ -95,17 +151,6 @@ with tab1:
                 )
 
         if clip_button_val:
-            download_video(upload_url, temporary_video_location)
-            filename = open(temporary_video_location, "rb")
-            byte_file = io.BytesIO(filename.read())
-            with open(temporary_video_location, "wb") as out:
-                out.write(byte_file.read())
-                with col_orig_video:
-                    with st.container(border=True):
-                        st.caption("original video")
-                        st.video(temporary_video_location)
-                    out.close()
-
             transcript, timestamped_words  = transcribe(video_file_path=temporary_video_location, model=model_selection)
             closest_time_ranges = get_nearest_snippets(input_phrase, transcript, timestamped_words) 
             
@@ -162,9 +207,10 @@ with tab1:
                         # )
     
                     out.close()
-                    
 
 
     with tempfile.TemporaryDirectory() as tmpdirname:
-        temporary_video_location = tmpdirname + "/original_" + str(uuid.uuid4()) + ".mp4"
-        button_logic(temporary_video_location, model_selection, input_phrase, upload_url)
+        st.session_state.temporary_video_location = tmpdirname + "/original_" + str(uuid.uuid4()) + ".mp4"
+
+        
+        # button_logic(temporary_video_location, model_selection, input_phrase, upload_url)
