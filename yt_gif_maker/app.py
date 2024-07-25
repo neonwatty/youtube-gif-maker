@@ -20,6 +20,11 @@ if "temporary_video_location" not in st.session_state:
     st.session_state.temporary_video_location = ""
 if "upload_url" not in st.session_state:
     st.session_state.upload_url = "https://www.youtube.com/shorts/43BhDHYBG0o"
+if "input_phrase" not in st.session_state:
+    if st.session_state.upload_url == "https://www.youtube.com/shorts/43BhDHYBG0o":
+        st.session_state.input_phrase = "every time we'd mention costa rica"
+    else:
+        st.session_state.input_phrase = ""
 
 
 def fetch_logic(upload_url: str, temporary_video_location: str):
@@ -44,7 +49,7 @@ def fetch_logic(upload_url: str, temporary_video_location: str):
         st.session_state.yt_just_transcript_text = all_text
 
 
-app_name = "YouTube gif maker"
+app_name = "YouTube gif maker (advanced)"
 st.set_page_config(page_title=app_name)
 st.title(app_name)
 
@@ -87,31 +92,22 @@ with tab1:
                 label="Whisper transcript",
             )
 
-    with st.container(border=True):
-        col1, col2, col3 = st.columns([8, 3, 4])
-        with col1:
-            input_phrase = st.text_area(
-                label="input phrase",
-                placeholder="enter in the input phrase you'd like gif-a-fied",
-                value="every time we'd mention costa rica",
-            )
-        with col2:
             model_selection = st.selectbox(
                 label="whisper model (base only in HF space)",
                 index=0,
                 options=avaliable_models,
             )
-        with col3:
-            col4 = st.empty()
-            with col4:
-                st.write("")
-                st.write("")
-            col5 = st.container()
-            with col5:
-                trans_button_val = st.button(label="just transcribe", type="secondary")
-            col6 = st.container()
-            with col6:
-                clip_button_val = st.button(label="transcribe & clip", type="primary")
+            
+            trans_button_val = st.button(label="transcribe with whisper", type="secondary")
+
+    with st.container(border=True):
+        input_phrase = st.text_input(
+            label="input phrase",
+            placeholder="enter in the input phrase you'd like gif-a-fied",
+            value=st.session_state.input_phrase,
+        )
+
+        clip_button_val = st.button(label="phrase-clip", type="secondary")
 
     a, col0, b = st.columns([1, 20, 1])
     colo1, colo2 = st.columns([3, 3])
