@@ -16,6 +16,10 @@ if "yt_transcript_text" not in st.session_state:
     st.session_state.yt_transcript_text = ""
 if "yt_just_transcript_text" not in st.session_state:
     st.session_state.yt_just_transcript_text = ""
+if "whisper_transcript_words" not in st.session_state:
+    st.session_state.whisper_transcript_words = []
+if "whisper_just_transcript" not in st.session_state:
+    st.session_state.whisper_just_transcript = ""
 if "temporary_video_location" not in st.session_state:
     st.session_state.temporary_video_location = ""
 if "upload_url" not in st.session_state:
@@ -87,8 +91,8 @@ with tab1:
 
         with col_yt_whisper.container(border=True):
             yt_whisper_text_area = st.text_area(
-                value="",
-                placeholder="Whisper transcript will appear here if you create it",
+                value=st.session_state.whisper_just_transcript,
+                placeholder="Whisper transcript will appear here if you make it",
                 label="Whisper transcript",
             )
 
@@ -120,8 +124,8 @@ with tab1:
         upload_url: str,
     ):
         if trans_button_val:
-            download_video(upload_url, temporary_video_location)
-            filename = open(temporary_video_location, "rb")
+            download_video(st.session_state.upload_url, st.session_state.temporary_video_location)
+            filename = open(st.session_state.temporary_video_location, "rb")
             byte_file = io.BytesIO(filename.read())
             with open(temporary_video_location, "wb") as out:
                 out.write(byte_file.read())
@@ -131,11 +135,11 @@ with tab1:
                         st.video(temporary_video_location)
                     out.close()
 
-            transcript, timestamped_words = transcribe(video_file_path=temporary_video_location, model=model_selection)
+            st.session_state.whisper_just_transcript, st.session_state.whisper_transcript_words = transcribe(video_file_path=temporary_video_location, model=model_selection)
 
             with col0.container(border=True):
                 st.text_area(
-                    value=transcript.strip(),
+                    value=st.session_state.whisper_just_transcript.strip(),
                     placeholder="transcribe text will be shown here",
                     label="transcribe text",
                 )
