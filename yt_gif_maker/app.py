@@ -11,6 +11,10 @@ import tempfile
 import uuid
 import io
 
+app_name = "YouTube gif maker (advanced)"
+st.set_page_config(page_title=app_name)
+st.title(app_name)
+
 
 # Initialization
 if "yt_transcript_words" not in st.session_state:
@@ -35,15 +39,7 @@ if "model_selection" not in st.session_state:
     st.session_state.model_selection = "base"
 if "model_selection_index" not in st.session_state:
     st.session_state.model_selection_index = 1
-
-
-def create_gif(clip_file_path: str):
-    clip_file_path_components = clip_file_path.split("/")
-    output_gif_path = "/".join(clip_file_path_components[:-2]) + "/" + clip_file_path_components[-1].split(".")[0] + ".gif"
-    make_gif(clip_file_path, output_gif_path, st.session_state.input_phrase)
-    with col_gif_1:
-        st.image(output_gif_path, caption="gif from clip 1")
-
+    
 
 def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
     transcript = st.session_state.yt_just_transcript
@@ -61,24 +57,26 @@ def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
     start_ms = closest_time_ranges[0][0]
     end_ms = closest_time_ranges[0][1]
     recovered_phrase = closest_chunks[0]
+    st.session_state.recovered_phrase_1 = recovered_phrase
+
     clip_video(temporary_video_path, clip_video_path, start_ms, end_ms)
     
+    clip_file_path_components = clip_video_path.split("/")
+    clip_gif_path = "/".join(clip_file_path_components[:-2]) + "/" + clip_file_path_components[-1].split(".")[0] + ".gif"
+    make_gif(clip_video_path, clip_gif_path, st.session_state.input_phrase)
+    
     with st.container(border=True):
-        filename = open(clip_video_path, "rb")
-        byte_file = io.BytesIO(filename.read())
-        with open(clip_video_path, "wb") as out:
-            out.write(byte_file.read())
-            with col_clip_1:
-                with st.container(border=True):
-                    st.caption(f"clip {str(0)}")
-                    st.video(clip_video_path)
-                out.close()
+        with col_clip_1:
+            with st.container(border=True):
+                st.markdown("#### video from clip 1")
+                st.video(clip_video_path)
+            st.text_input(label="similar phrase", value=st.session_state.recovered_phrase_1)
 
-                col_recovered_phrase, col_gif_button = st.columns([6, 4])
-                with col_recovered_phrase:
-                    st.session_state.recovered_phrase_1 = recovered_phrase
-                    st.text_area(label="similar phrase", value=st.session_state.recovered_phrase_1)
-                    st.button(label="make gif", type="secondary", on_click=create_gif, args=(clip_video_path, ))
+        with col_gif_1:
+            with st.container(border=True):
+                st.markdown("#### gif from clip 1")
+                st.image(clip_gif_path)
+                    
 
 
 def fetch_logic(upload_url: str, temporary_video_location: str):
@@ -110,9 +108,7 @@ def transcribe_logic(
     st.session_state.whisper_just_transcript, st.session_state.whisper_transcript_words = transcribe(video_file_path=temporary_video_location, model=model_selection)
 
 
-app_name = "YouTube gif maker (advanced)"
-st.set_page_config(page_title=app_name)
-st.title(app_name)
+
 
 
 tab1, tab2 = st.tabs([app_name, "💡 About"])
@@ -175,13 +171,12 @@ with tab1:
             value=st.session_state.input_phrase,
         )
         clip_button_val = st.button(label="phrase-clip", type="secondary",  on_click=clip_temp_videos, args=(st.session_state.temporary_video_location, st.session_state.input_phrase))
+        col_clip_1, col_gif_1 = st.columns([4,4])
+
         
-        col_clip_1, col_gif_1 = st.columns([4, 4])
-        col_clip_empty_2_1, col_clip_2, col_clip_recovered_phrase_2_2 = st.columns([2, 8, 4])
-        col_clip_empty_3_1, col_clip_3, col_clip_recovered_phrase_2_3 = st.columns([2, 8, 4])
+    
 
-
-
+    
 #     a, col0, b = st.columns([1, 20, 1])
 #     colo1, colo2 = st.columns([3, 3])
 
