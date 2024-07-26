@@ -3,16 +3,6 @@ from PIL import Image, ImageDraw, ImageSequence
 import io
 
 
-def clip_video_and_gif(video_file_path: str, output_clip_path: str, output_gif_path: str, start_ms: int, end_ms: int):
-    start_time = start_ms / 1000.0
-    end_time = end_ms / 1000.0
-    video = VideoFileClip(video_file_path)
-    subclip = video.subclip(start_time, end_time)
-    subclip.write_videofile(output_clip_path, codec="libx264", audio_codec="aac")
-    video.write_gif(output_gif_path, fps=25, program="ffmpeg")
-    video.close()
-
-
 def draw_on_gif(input_gif_path: str, output_gif_path: str, text) -> None:
     im = Image.open(input_gif_path)
 
@@ -39,3 +29,21 @@ def draw_on_gif(input_gif_path: str, output_gif_path: str, text) -> None:
         frames.append(frame)
     # Save the frames as a new image
     frames[0].save(output_gif_path, save_all=True, append_images=frames[1:])
+    
+
+def make_gif(video_file_path: str, output_gif_path: str, input_phrase: str) -> None:
+    video = VideoFileClip(video_file_path)
+    video.write_gif(output_gif_path, fps=25, program="ffmpeg")
+    draw_on_gif(output_gif_path, output_gif_path, input_phrase)
+
+
+def clip_video_and_gif(video_file_path: str, output_clip_path: str, output_gif_path: str, start_ms: int, end_ms: int):
+    start_time = start_ms / 1000.0
+    end_time = end_ms / 1000.0
+    video = VideoFileClip(video_file_path)
+    subclip = video.subclip(start_time, end_time)
+    subclip.write_videofile(output_clip_path, codec="libx264", audio_codec="aac")
+    video.write_gif(output_gif_path, fps=25, program="ffmpeg")
+    video.close()
+
+

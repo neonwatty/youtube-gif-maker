@@ -4,7 +4,7 @@ from yt_gif_maker.transcribe import transcribe
 from yt_gif_maker.yt_download import download_video
 from yt_gif_maker.yt_transcript import get_single_transcript
 from yt_gif_maker.nearest import get_nearest_snippets
-from yt_gif_maker.gif_maker import clip_video_and_gif, draw_on_gif
+from yt_gif_maker.gif_maker import make_gif
 from yt_gif_maker.clip import clip_video
 import base64
 import tempfile
@@ -24,7 +24,6 @@ if "whisper_just_transcript" not in st.session_state:
 if "temporary_video_location" not in st.session_state:
     with tempfile.TemporaryDirectory() as tmpdirname:
         st.session_state.temporary_video_location = tmpdirname + "/original_" + str(uuid.uuid4()) + ".mp4"
-    
 if "upload_url" not in st.session_state:
     st.session_state.upload_url = "https://www.youtube.com/shorts/43BhDHYBG0o"
 if "input_phrase" not in st.session_state:
@@ -36,6 +35,12 @@ if "model_selection" not in st.session_state:
     st.session_state.model_selection = "base"
 if "model_selection_index" not in st.session_state:
     st.session_state.model_selection_index = 1
+
+
+def create_gif(clip_file_path: str):
+    clip_file_path_components = clip_file_path.split("/")
+    output_gif_path = "/".join(clip_file_path_components[:-2]) + clip_file_path_components[-1].split(".")[0] + ".gif"
+    make_gif(clip_file_path, output_gif_path, st.session_state.input_phrase)
 
 
 def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
@@ -67,10 +72,11 @@ def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
                     st.video(clip_video_path)
                 out.close()
 
-                col_recovered_phrase, col_gif_button = st.columns([4, 4])
+                col_recovered_phrase, col_gif_button = st.columns([6, 4])
                 with col_recovered_phrase:
                     st.session_state.recovered_phrase_1 = recovered_phrase
                     st.text_area(label="similar phrase", value=st.session_state.recovered_phrase_1)
+                    st.button(label="make gif", type="secondary", on_click=create_gif, args=(clip_video_path, ))
 
 
 def fetch_logic(upload_url: str, temporary_video_location: str):
@@ -126,7 +132,7 @@ with tab2:
 with tab1:
     with st.container(border=True):
         with st.container(border=True):
-            st.markdown("## upload area")
+            st.markdown("#### upload area")
             upload_url = st.text_input(label="YouTube / Shorts url", value=st.session_state.upload_url)
             yt_fetch_button = st.button(
                 label="fetch video", type="secondary", on_click=fetch_logic, args=(st.session_state.upload_url, st.session_state.temporary_video_location)
@@ -135,7 +141,7 @@ with tab1:
         col_video_empty_1, col_orig_video, col_video_empty_2 = st.columns([4, 8, 4])
 
     with st.container(border=True):
-        st.markdown("## transcript area")
+        st.markdown("#### transcript area")
         col_yt_trans, col_yt_whisper = st.columns([4, 4])
         with col_yt_trans.container(border=True):
             yt_trans_text_area = st.text_area(
@@ -160,7 +166,7 @@ with tab1:
             trans_button_val = st.button(label="transcribe with whisper", type="secondary", on_click=transcribe_logic, args=(st.session_state.temporary_video_location, st.session_state.model_selection))
 
     with st.container(border=True):
-        st.markdown("## clip / gif maker area")
+        st.markdown("#### clip / gif maker area")
         input_phrase = st.text_input(
             label="input phrase",
             placeholder="enter in the input phrase you'd like gif-a-fied",
