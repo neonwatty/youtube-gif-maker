@@ -126,6 +126,7 @@ with tab2:
 with tab1:
     with st.container(border=True):
         with st.container(border=True):
+            st.markdown("## upload area")
             upload_url = st.text_input(label="YouTube / Shorts url", value=st.session_state.upload_url)
             yt_fetch_button = st.button(
                 label="fetch video", type="secondary", on_click=fetch_logic, args=(st.session_state.upload_url, st.session_state.temporary_video_location)
@@ -134,6 +135,7 @@ with tab1:
         col_video_empty_1, col_orig_video, col_video_empty_2 = st.columns([4, 8, 4])
 
     with st.container(border=True):
+        st.markdown("## transcript area")
         col_yt_trans, col_yt_whisper = st.columns([4, 4])
         with col_yt_trans.container(border=True):
             yt_trans_text_area = st.text_area(
@@ -158,6 +160,7 @@ with tab1:
             trans_button_val = st.button(label="transcribe with whisper", type="secondary", on_click=transcribe_logic, args=(st.session_state.temporary_video_location, st.session_state.model_selection))
 
     with st.container(border=True):
+        st.markdown("## clip / gif maker area")
         input_phrase = st.text_input(
             label="input phrase",
             placeholder="enter in the input phrase you'd like gif-a-fied",
