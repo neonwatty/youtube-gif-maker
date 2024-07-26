@@ -41,6 +41,8 @@ def create_gif(clip_file_path: str):
     clip_file_path_components = clip_file_path.split("/")
     output_gif_path = "/".join(clip_file_path_components[:-2]) + "/" + clip_file_path_components[-1].split(".")[0] + ".gif"
     make_gif(clip_file_path, output_gif_path, st.session_state.input_phrase)
+    with col_gif_1:
+        st.image(output_gif_path, caption="gif from clip 1")
 
 
 def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
@@ -174,7 +176,7 @@ with tab1:
         )
         clip_button_val = st.button(label="phrase-clip", type="secondary",  on_click=clip_temp_videos, args=(st.session_state.temporary_video_location, st.session_state.input_phrase))
         
-        col_clip_1, col_clip_recovered_phrase_1_2 = st.columns([4, 4])
+        col_clip_1, col_gif_1 = st.columns([4, 4])
         col_clip_empty_2_1, col_clip_2, col_clip_recovered_phrase_2_2 = st.columns([2, 8, 4])
         col_clip_empty_3_1, col_clip_3, col_clip_recovered_phrase_2_3 = st.columns([2, 8, 4])
 
