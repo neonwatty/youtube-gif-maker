@@ -39,7 +39,6 @@ if "model_selection_index" not in st.session_state:
 
 
 def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
-    
     transcript = st.session_state.yt_just_transcript
     timestamped_words = st.session_state.yt_transcript_words
     if timestamped_words is None:
@@ -48,7 +47,7 @@ def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
     if st.session_state.whisper_transcript_words is not None:
         transcript = st.session_state.whisper_just_transcript
         timestamped_words = st.session_state.whisper_transcript_words
-        
+
     closest_time_ranges, closest_chunks = get_nearest_snippets(input_phrase, transcript, timestamped_words) 
     
     clip_video_path = "/".join(temporary_video_path.split("/")[:-2]) + f"/test_clip_{str(0)}.mp4"
@@ -67,10 +66,11 @@ def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
                     st.caption(f"clip {str(0)}")
                     st.video(clip_video_path)
                 out.close()
-            with col_clip_recovered_phrase_1_2:
-                st.markdown('#')
-                st.session_state.recovered_phrase_1 = recovered_phrase
-                st.text_input(label="similar phrase", value=st.session_state.recovered_phrase_1)
+
+                col_recovered_phrase, col_gif_button = st.columns([4, 4])
+                with col_recovered_phrase:
+                    st.session_state.recovered_phrase_1 = recovered_phrase
+                    st.text_area(label="similar phrase", value=st.session_state.recovered_phrase_1)
 
 
 def fetch_logic(upload_url: str, temporary_video_location: str):
