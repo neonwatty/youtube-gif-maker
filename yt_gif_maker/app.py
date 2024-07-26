@@ -48,25 +48,29 @@ def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
     if st.session_state.whisper_transcript_words is not None:
         transcript = st.session_state.whisper_just_transcript
         timestamped_words = st.session_state.whisper_transcript_words
-    
-    print(f"transcript --> {transcript}")
-    
-    closest_time_ranges = get_nearest_snippets(input_phrase, transcript, timestamped_words) 
+        
+    closest_time_ranges, closest_chunks = get_nearest_snippets(input_phrase, transcript, timestamped_words) 
     
     clip_video_path = "/".join(temporary_video_path.split("/")[:-2]) + f"/test_clip_{str(0)}.mp4"
     start_ms = closest_time_ranges[0][0]
     end_ms = closest_time_ranges[0][1]
+    recovered_phrase = closest_chunks[0]
     clip_video(temporary_video_path, clip_video_path, start_ms, end_ms)
     
-    filename = open(clip_video_path, "rb")
-    byte_file = io.BytesIO(filename.read())
-    with open(clip_video_path, "wb") as out:
-        out.write(byte_file.read())
-        with col_clip_1:
-            with st.container(border=True):
-                st.caption(f"clip {str(0)}")
-                st.video(clip_video_path)
-            out.close()
+    with st.container(border=True):
+        filename = open(clip_video_path, "rb")
+        byte_file = io.BytesIO(filename.read())
+        with open(clip_video_path, "wb") as out:
+            out.write(byte_file.read())
+            with col_clip_1:
+                with st.container(border=True):
+                    st.caption(f"clip {str(0)}")
+                    st.video(clip_video_path)
+                out.close()
+            with col_clip_recovered_phrase_1_2:
+                st.markdown('#')
+                st.session_state.recovered_phrase_1 = recovered_phrase
+                st.text_input(label="similar phrase", value=st.session_state.recovered_phrase_1)
 
 
 def fetch_logic(upload_url: str, temporary_video_location: str):
@@ -161,9 +165,9 @@ with tab1:
         )
         clip_button_val = st.button(label="phrase-clip", type="secondary",  on_click=clip_temp_videos, args=(st.session_state.temporary_video_location, st.session_state.input_phrase))
         
-        col_clip_empty_1_1, col_clip_1, col_clip_empty_1_2 = st.columns([4, 8, 4])
-        col_clip_empty_2_1, col_clip_2, col_clip_empty_2_2 = st.columns([4, 8, 4])
-        col_clip_empty_3_1, col_clip_3, col_clip_empty_2_3 = st.columns([4, 8, 4])
+        col_clip_1, col_clip_recovered_phrase_1_2 = st.columns([4, 4])
+        col_clip_empty_2_1, col_clip_2, col_clip_recovered_phrase_2_2 = st.columns([2, 8, 4])
+        col_clip_empty_3_1, col_clip_3, col_clip_recovered_phrase_2_3 = st.columns([2, 8, 4])
 
 
 

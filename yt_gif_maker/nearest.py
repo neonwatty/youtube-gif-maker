@@ -2,6 +2,7 @@ from typing import Tuple
 import numpy as np
 from yt_gif_maker.embed import embed_query, embed_chunks
 from yt_gif_maker.chunk import create_all
+from typing import Tuple
 
 
 def find_closest(query: str, normalized_embeddings: np.array, chunks: list, pointers: list) -> Tuple[list, list]:
@@ -29,9 +30,9 @@ def create_result_time_range(timestamped_words: list, closest_pointers: list):
     return time_ranges
 
 
-def get_nearest_snippets(query: str, transcript: str, timestamped_words: list) -> list:
+def get_nearest_snippets(query: str, transcript: str, timestamped_words: list) -> Tuple[list, list]:
     chunks, pointers = create_all(query, transcript)
     normalized_chunk_embeddings = embed_chunks(chunks)
     closest_chunks, closest_pointers = find_closest(query, normalized_chunk_embeddings, chunks, pointers)
     closest_time_ranges = create_result_time_range(timestamped_words, closest_pointers)
-    return closest_time_ranges
+    return closest_time_ranges, closest_chunks
