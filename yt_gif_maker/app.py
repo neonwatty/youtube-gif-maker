@@ -39,7 +39,7 @@ if "model_selection_index" not in st.session_state:
 
 def create_gif(clip_file_path: str):
     clip_file_path_components = clip_file_path.split("/")
-    output_gif_path = "/".join(clip_file_path_components[:-2]) + clip_file_path_components[-1].split(".")[0] + ".gif"
+    output_gif_path = "/".join(clip_file_path_components[:-2]) + "/" + clip_file_path_components[-1].split(".")[0] + ".gif"
     make_gif(clip_file_path, output_gif_path, st.session_state.input_phrase)
 
 
