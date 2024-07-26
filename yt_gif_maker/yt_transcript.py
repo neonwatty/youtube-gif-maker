@@ -24,7 +24,7 @@ def estimate_word_times_proportional(data: list) -> list:
             result.append({
                 'word': word,
                 'start': round(word_start, 2),
-                'stop': round(word_stop, 2)
+                'end': round(word_stop, 2)
             })            
             word_start = word_stop
     return result

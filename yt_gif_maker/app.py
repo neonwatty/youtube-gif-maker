@@ -13,14 +13,10 @@ import io
 
 
 # Initialization
-if "yt_transcript_text" not in st.session_state:
-    st.session_state.yt_transcript_text = None
-if "yt_just_transcript_words" not in st.session_state:
-    st.session_state.yt_just_transcript_words = None
-if "yt_just_transcript_text" not in st.session_state:
-    st.session_state.yt_just_transcript_text = None
-
-
+if "yt_transcript_words" not in st.session_state:
+    st.session_state.yt_transcript_words = None
+if "yt_just_transcript" not in st.session_state:
+    st.session_state.yt_just_transcript = None
 if "whisper_transcript_words" not in st.session_state:
     st.session_state.whisper_transcript_words = None
 if "whisper_just_transcript" not in st.session_state:
@@ -42,17 +38,18 @@ if "model_selection_index" not in st.session_state:
     st.session_state.model_selection_index = 1
 
 
-def clip_temp_videos(input_phrase: str,
-                     transcript: str,
-                     timestamped_words: list,
-                     temporary_video_path: str,
-                     max_clips: int = 3) -> None:
+def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
     
-    transcript = st.session_state.yt_transcript_text
-    # timestamped_words = st.session_state.
+    transcript = st.session_state.yt_just_transcript
+    timestamped_words = st.session_state.yt_transcript_words
+    if timestamped_words is None:
+        return
     
     if st.session_state.whisper_transcript_words is not None:
-        pass    # HERE
+        transcript = st.session_state.whisper_just_transcript
+        timestamped_words = st.session_state.whisper_transcript_words
+    
+    print(f"transcript --> {transcript}")
     
     closest_time_ranges = get_nearest_snippets(input_phrase, transcript, timestamped_words) 
     
@@ -60,6 +57,16 @@ def clip_temp_videos(input_phrase: str,
     start_ms = closest_time_ranges[0][0]
     end_ms = closest_time_ranges[0][1]
     clip_video(temporary_video_path, clip_video_path, start_ms, end_ms)
+    
+    filename = open(clip_video_path, "rb")
+    byte_file = io.BytesIO(filename.read())
+    with open(clip_video_path, "wb") as out:
+        out.write(byte_file.read())
+        with col_clip_1:
+            with st.container(border=True):
+                st.caption(f"clip {str(0)}")
+                st.video(clip_video_path)
+            out.close()
 
 
 def fetch_logic(upload_url: str, temporary_video_location: str):
@@ -80,7 +87,7 @@ def fetch_logic(upload_url: str, temporary_video_location: str):
     transcript_text = yt_transcript["transcript"]
     transcript_words = yt_transcript["transcript_words"]
 
-    st.session_state.yt_just_transcript_text = transcript_text
+    st.session_state.yt_just_transcript = transcript_text
     st.session_state.yt_transcript_words = transcript_words
 
 
@@ -126,7 +133,7 @@ with tab1:
         col_yt_trans, col_yt_whisper = st.columns([4, 4])
         with col_yt_trans.container(border=True):
             yt_trans_text_area = st.text_area(
-                value=st.session_state.yt_just_transcript_text,
+                value=st.session_state.yt_just_transcript,
                 placeholder="YouTube transcript will appear here if it exists",
                 label="YouTube's transcript",
             )
@@ -152,7 +159,7 @@ with tab1:
             placeholder="enter in the input phrase you'd like gif-a-fied",
             value=st.session_state.input_phrase,
         )
-        clip_button_val = st.button(label="phrase-clip", type="secondary",  on_click=clip_temp_videos, args=(st.session_state.temporary_video_location, st.session_state.model_selection))
+        clip_button_val = st.button(label="phrase-clip", type="secondary",  on_click=clip_temp_videos, args=(st.session_state.temporary_video_location, st.session_state.input_phrase))
         
         col_clip_empty_1_1, col_clip_1, col_clip_empty_1_2 = st.columns([4, 8, 4])
         col_clip_empty_2_1, col_clip_2, col_clip_empty_2_2 = st.columns([4, 8, 4])
