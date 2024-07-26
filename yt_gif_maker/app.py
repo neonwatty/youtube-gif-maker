@@ -6,7 +6,6 @@ from yt_gif_maker.yt_transcript import get_single_transcript
 from yt_gif_maker.nearest import get_nearest_snippets
 from yt_gif_maker.gif_maker import make_gif
 from yt_gif_maker.clip import clip_video
-import base64
 import tempfile
 import uuid
 import io
@@ -40,6 +39,13 @@ if "model_selection" not in st.session_state:
 if "model_selection_index" not in st.session_state:
     st.session_state.model_selection_index = 1
     
+if "clip_video_path_1" not in st.session_state:
+    st.session_state.clip_video_path_1 = "./data/input/blank.mp4"
+if "clip_gif_path_1" not in st.session_state:
+    st.session_state.clip_gif_path_1 = "./data/input/blank.jpg"
+if "recovered_phrase_1" not in st.session_state:
+    st.session_state.recovered_phrase_1 = ""
+
 
 def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
     transcript = st.session_state.yt_just_transcript
@@ -61,22 +67,13 @@ def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
 
     clip_video(temporary_video_path, clip_video_path, start_ms, end_ms)
     
+    st.session_state.clip_video_path_1 = clip_video_path
+    
     clip_file_path_components = clip_video_path.split("/")
     clip_gif_path = "/".join(clip_file_path_components[:-2]) + "/" + clip_file_path_components[-1].split(".")[0] + ".gif"
     make_gif(clip_video_path, clip_gif_path, st.session_state.input_phrase)
     
-    with st.container(border=True):
-        with col_clip_1:
-            with st.container(border=True):
-                st.markdown("#### video from clip 1")
-                st.video(clip_video_path)
-            st.text_input(label="similar phrase", value=st.session_state.recovered_phrase_1)
-
-        with col_gif_1:
-            with st.container(border=True):
-                st.markdown("#### gif from clip 1")
-                st.image(clip_gif_path)
-                    
+    st.session_state.clip_gif_path_1 = clip_gif_path
 
 
 def fetch_logic(upload_url: str, temporary_video_location: str):
@@ -106,9 +103,6 @@ def transcribe_logic(
     model_selection: str,
 ):
     st.session_state.whisper_just_transcript, st.session_state.whisper_transcript_words = transcribe(video_file_path=temporary_video_location, model=model_selection)
-
-
-
 
 
 tab1, tab2 = st.tabs([app_name, "💡 About"])
@@ -171,9 +165,19 @@ with tab1:
             value=st.session_state.input_phrase,
         )
         clip_button_val = st.button(label="phrase-clip", type="secondary",  on_click=clip_temp_videos, args=(st.session_state.temporary_video_location, st.session_state.input_phrase))
-        col_clip_1, col_gif_1 = st.columns([4,4])
+        col_clip_1, col_gif_1 = st.columns([4, 4])
 
-        
+        with st.container(border=True):
+            with col_clip_1:
+                with st.container(border=True):
+                    st.markdown("#### video from clip 1")
+                    st.video(st.session_state.clip_video_path_1)
+                st.text_input(label="similar phrase", value=st.session_state.recovered_phrase_1)
+
+            with col_gif_1:
+                with st.container(border=True):
+                    st.markdown("#### gif from clip 1")
+                    st.image(st.session_state.clip_gif_path_1)
     
 
     
