@@ -39,12 +39,12 @@ if "model_selection" not in st.session_state:
 if "model_selection_index" not in st.session_state:
     st.session_state.model_selection_index = 1
     
-if "clip_video_path_1" not in st.session_state:
-    st.session_state.clip_video_path_1 = "./data/input/blank.mp4"
-if "clip_gif_path_1" not in st.session_state:
-    st.session_state.clip_gif_path_1 = "./data/input/blank.jpg"
-if "recovered_phrase_1" not in st.session_state:
-    st.session_state.recovered_phrase_1 = ""
+if "clip_video_paths" not in st.session_state:
+    st.session_state.clip_video_paths = ["./data/input/blank.mp4"]*3
+if "clip_gif_paths" not in st.session_state:
+    st.session_state.clip_gif_paths = ["./data/input/blank.jpg"]*3
+if "recovered_phrases" not in st.session_state:
+    st.session_state.recovered_phrases = [""]*3
 
 
 def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
@@ -59,21 +59,21 @@ def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
 
     closest_time_ranges, closest_chunks = get_nearest_snippets(input_phrase, transcript, timestamped_words) 
     
-    clip_video_path = "/".join(temporary_video_path.split("/")[:-2]) + f"/test_clip_{str(0)}.mp4"
-    start_ms = closest_time_ranges[0][0]
-    end_ms = closest_time_ranges[0][1]
-    recovered_phrase = closest_chunks[0]
-    st.session_state.recovered_phrase_1 = recovered_phrase
+    for i in range(3):
+        clip_video_path = "/".join(temporary_video_path.split("/")[:-2]) + f"/test_clip_{str(i+1)}.mp4"
+        clip_file_path_components = clip_video_path.split("/")
+        clip_gif_path = "/".join(clip_file_path_components[:-2]) + "/" + clip_file_path_components[-1].split(".")[0] + ".gif"
+        
+        start_ms = closest_time_ranges[i][0]
+        end_ms = closest_time_ranges[i][1]
+        recovered_phrase = closest_chunks[i]
+        
+        st.session_state.recovered_phrases[i] = recovered_phrase
+        st.session_state.clip_video_paths[i] = clip_video_path
+        st.session_state.clip_gif_paths[i] = clip_gif_path
 
-    clip_video(temporary_video_path, clip_video_path, start_ms, end_ms)
-    
-    st.session_state.clip_video_path_1 = clip_video_path
-    
-    clip_file_path_components = clip_video_path.split("/")
-    clip_gif_path = "/".join(clip_file_path_components[:-2]) + "/" + clip_file_path_components[-1].split(".")[0] + ".gif"
-    make_gif(clip_video_path, clip_gif_path, st.session_state.input_phrase)
-    
-    st.session_state.clip_gif_path_1 = clip_gif_path
+        clip_video(temporary_video_path, clip_video_path, start_ms, end_ms)
+        make_gif(clip_video_path, clip_gif_path, st.session_state.input_phrase)
 
 
 def fetch_logic(upload_url: str, temporary_video_location: str):
@@ -166,20 +166,47 @@ with tab1:
         )
         clip_button_val = st.button(label="phrase-clip", type="secondary",  on_click=clip_temp_videos, args=(st.session_state.temporary_video_location, st.session_state.input_phrase))
         col_clip_1, col_gif_1 = st.columns([4, 4])
+        col_clip_2, col_gif_2 = st.columns([4, 4])
+        col_clip_3, col_gif_3 = st.columns([4, 4])
+
 
         with st.container(border=True):
             with col_clip_1:
                 with st.container(border=True):
                     st.markdown("#### video from clip 1")
-                    st.video(st.session_state.clip_video_path_1)
-                st.text_input(label="similar phrase", value=st.session_state.recovered_phrase_1)
+                    st.video(st.session_state.clip_video_paths[0])
+                st.text_input(label="similar phrase", value=st.session_state.recovered_phrases[0], key=0)
 
             with col_gif_1:
                 with st.container(border=True):
                     st.markdown("#### gif from clip 1")
-                    st.image(st.session_state.clip_gif_path_1)
+                    st.image(st.session_state.clip_gif_paths[0])
     
+    
+        with st.container(border=True):
+            with col_clip_2:
+                with st.container(border=True):
+                    st.markdown("#### video from clip 2")
+                    st.video(st.session_state.clip_video_paths[1])
+                st.text_input(label="similar phrase", value=st.session_state.recovered_phrases[1], key=1)
 
+            with col_gif_2:
+                with st.container(border=True):
+                    st.markdown("#### gif from clip 2")
+                    st.image(st.session_state.clip_gif_paths[1])
+                    
+                    
+        with st.container(border=True):
+            with col_clip_3:
+                with st.container(border=True):
+                    st.markdown("#### video from clip 3")
+                    st.video(st.session_state.clip_video_paths[2])
+                st.text_input(label="similar phrase", value=st.session_state.recovered_phrases[2], key=2)
+
+            with col_gif_3:
+                with st.container(border=True):
+                    st.markdown("#### gif from clip 3")
+                    st.image(st.session_state.clip_gif_paths[2])
     
 #     a, col0, b = st.columns([1, 20, 1])
 #     colo1, colo2 = st.columns([3, 3])
