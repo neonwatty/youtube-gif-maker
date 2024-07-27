@@ -253,6 +253,7 @@ with tab1:
                         data=file,
                         file_name=f"{st.session_state.input_phrase}.gif",
                         mime="image/gif",
+                        key=20
                     )
 
         with st.container(border=True):
@@ -274,6 +275,7 @@ with tab1:
                         data=file,
                         file_name=f"{st.session_state.input_phrase}.gif",
                         mime="image/gif",
+                        key=21
                     )
 
         with st.container(border=True):
@@ -295,6 +297,7 @@ with tab1:
                         data=file,
                         file_name=f"{st.session_state.input_phrase}.gif",
                         mime="image/gif",
+                        key=22
                     )
 #     a, col0, b = st.columns([1, 20, 1])
 #     colo1, colo2 = st.columns([3, 3])

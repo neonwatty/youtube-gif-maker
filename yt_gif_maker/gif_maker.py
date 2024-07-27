@@ -38,7 +38,7 @@ def draw_text_on_gif(input_gif_path, output_gif_path, input_phrase):
 
                 # Load a larger font (size 5 times larger)
                 try:
-                    font_size = int(width * 0.1)  # 3 * 10  # Example: base size 10
+                    font_size = int(width * 0.075)  # 3 * 10  # Example: base size 10
                     font = ImageFont.truetype("./yt_gif_maker/arial.ttf", font_size)
                 except IOError:
                     raise IOError("Font file not found.")
