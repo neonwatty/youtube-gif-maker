@@ -45,6 +45,9 @@ if "clip_gif_paths" not in st.session_state:
     st.session_state.clip_gif_paths = ["./data/input/blank.jpg"]*3
 if "recovered_phrases" not in st.session_state:
     st.session_state.recovered_phrases = [""]*3
+    
+if "text_on_gif_val" not in st.session_state:
+    st.session_state.text_on_gif_val = True
 
 
 def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
@@ -73,7 +76,7 @@ def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
         st.session_state.clip_gif_paths[i] = clip_gif_path
 
         clip_video(temporary_video_path, clip_video_path, start_ms, end_ms)
-        make_gif(clip_video_path, clip_gif_path, st.session_state.input_phrase)
+        make_gif(clip_video_path, clip_gif_path, st.session_state.input_phrase, st.session_state.text_on_gif_val)
 
 
 def fetch_logic(upload_url: str, temporary_video_location: str):
@@ -163,12 +166,17 @@ with tab1:
             label="input phrase",
             placeholder="enter in the input phrase you'd like gif-a-fied",
             value=st.session_state.input_phrase,
+            max_chars=34
         )
-        clip_button_val = st.button(label="phrase-clip", type="secondary",  on_click=clip_temp_videos, args=(st.session_state.temporary_video_location, st.session_state.input_phrase))
+        clip_button_col, clip_button_check, clip_empty = st.columns([4, 2, 4])
+        with clip_button_col:
+            clip_button_val = st.button(label="phrase-clip", type="secondary",  on_click=clip_temp_videos, args=(st.session_state.temporary_video_location, st.session_state.input_phrase))
+        with clip_button_check:
+            st.session_state.text_on_gif_val = st.checkbox("show input phrase on gif", value=st.session_state.text_on_gif_val)
+
         col_clip_1, col_gif_1 = st.columns([4, 4])
         col_clip_2, col_gif_2 = st.columns([4, 4])
         col_clip_3, col_gif_3 = st.columns([4, 4])
-
 
         with st.container(border=True):
             with col_clip_1:
