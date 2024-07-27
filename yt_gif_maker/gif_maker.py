@@ -53,16 +53,16 @@ def draw_text_on_gif(input_gif_path, output_gif_path, input_phrase):
                 frame = img.copy()
                 draw = ImageDraw.Draw(frame)
                 
+                # Calculate the maximum width for each line of text
+                width, height = frame.size
+                max_line_width = width * 0.9  # 90% of frame width for some padding
+                
                 # Load a larger font (size 5 times larger)
                 try:
                     font_size = 3 * 10  # Example: base size 10
                     font = ImageFont.truetype("./yt_gif_maker/arial.ttf", font_size)
                 except IOError:
                     raise IOError("Font file not found.")
-                
-                # Calculate the maximum width for each line of text
-                width, height = frame.size
-                max_line_width = width * 0.9  # 90% of frame width for some padding
                 
                 # Split the text into two lines
                 def split_text(text, max_width, font):

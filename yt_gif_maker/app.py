@@ -50,7 +50,7 @@ if "text_on_gif_val" not in st.session_state:
     st.session_state.text_on_gif_val = True
 
 
-def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
+def clip_temp_videos(temporary_video_path: str) -> None:
     transcript = st.session_state.yt_just_transcript
     timestamped_words = st.session_state.yt_transcript_words
     if timestamped_words is None:
@@ -60,7 +60,7 @@ def clip_temp_videos(temporary_video_path: str, input_phrase: str) -> None:
         transcript = st.session_state.whisper_just_transcript
         timestamped_words = st.session_state.whisper_transcript_words
 
-    closest_time_ranges, closest_chunks = get_nearest_snippets(input_phrase, transcript, timestamped_words) 
+    closest_time_ranges, closest_chunks = get_nearest_snippets(st.session_state.input_phrase, transcript, timestamped_words) 
     
     for i in range(3):
         clip_video_path = "/".join(temporary_video_path.split("/")[:-2]) + f"/test_clip_{str(i+1)}.mp4"
@@ -128,7 +128,7 @@ with tab1:
     with st.container(border=True):
         with st.container(border=True):
             st.markdown("#### upload area")
-            upload_url = st.text_input(label="YouTube / Shorts url", value=st.session_state.upload_url)
+            st.session_state.upload_url = st.text_input(label="YouTube / Shorts url", value=st.session_state.upload_url)
             yt_fetch_button = st.button(
                 label="fetch video", type="secondary", on_click=fetch_logic, args=(st.session_state.upload_url, st.session_state.temporary_video_location)
             )
@@ -162,7 +162,7 @@ with tab1:
 
     with st.container(border=True):
         st.markdown("#### clip / gif maker area")
-        input_phrase = st.text_input(
+        st.session_state.input_phrase = st.text_input(
             label="input phrase",
             placeholder="enter in the input phrase you'd like gif-a-fied",
             value=st.session_state.input_phrase,
@@ -170,7 +170,7 @@ with tab1:
         )
         clip_button_col, clip_button_check, clip_empty = st.columns([4, 2, 4])
         with clip_button_col:
-            clip_button_val = st.button(label="phrase-clip", type="secondary",  on_click=clip_temp_videos, args=(st.session_state.temporary_video_location, st.session_state.input_phrase))
+            clip_button_val = st.button(label="phrase-clip", type="secondary",  on_click=clip_temp_videos, args=(st.session_state.temporary_video_location, ))
         with clip_button_check:
             st.session_state.text_on_gif_val = st.checkbox("show input phrase on gif", value=st.session_state.text_on_gif_val)
 
