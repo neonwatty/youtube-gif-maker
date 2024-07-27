@@ -247,6 +247,14 @@ with tab1:
                     st.image(st.session_state.clip_gif_paths[0])
                 st.text_input(label="gif size (in MBs)", value=st.session_state.gif_sizes[0], key=10)
 
+                with open(st.session_state.clip_gif_paths[0], "rb") as file:
+                    btn = st.download_button(
+                        label="download gif",
+                        data=file,
+                        file_name=f"{st.session_state.input_phrase}.gif",
+                        mime="image/gif",
+                    )
+
         with st.container(border=True):
             with col_clip_2:
                 with st.container(border=True):
@@ -259,6 +267,14 @@ with tab1:
                     st.markdown("#### gif from clip 2")
                     st.image(st.session_state.clip_gif_paths[1])
                 st.text_input(label="gif size (in MBs)", value=st.session_state.gif_sizes[0], key=11)
+
+                with open(st.session_state.clip_gif_paths[1], "rb") as file:
+                    btn = st.download_button(
+                        label="download gif",
+                        data=file,
+                        file_name=f"{st.session_state.input_phrase}.gif",
+                        mime="image/gif",
+                    )
 
         with st.container(border=True):
             with col_clip_3:
@@ -273,6 +289,13 @@ with tab1:
                     st.image(st.session_state.clip_gif_paths[2])
                 st.text_input(label="gif size (in MBs)", value=st.session_state.gif_sizes[2], key=12)
 
+                with open(st.session_state.clip_gif_paths[2], "rb") as file:
+                    btn = st.download_button(
+                        label="download gif",
+                        data=file,
+                        file_name=f"{st.session_state.input_phrase}.gif",
+                        mime="image/gif",
+                    )
 #     a, col0, b = st.columns([1, 20, 1])
 #     colo1, colo2 = st.columns([3, 3])
 
