@@ -5,27 +5,23 @@ from youtube_transcript_api import YouTubeTranscriptApi
 def estimate_word_times_proportional(data: list) -> list:
     result = []
     for entry in data:
-        phrase = entry['text']
-        start = entry['start']
-        duration = entry['duration']
-        
+        phrase = entry["text"]
+        start = entry["start"]
+        duration = entry["duration"]
+
         words = phrase.split()
         total_chars = sum(len(word) for word in words)
-        
+
         if total_chars == 0:
-            continue        
+            continue
         word_start = start
-        
+
         for word in words:
             word_chars = len(word)
             word_duration = (word_chars / total_chars) * duration
             word_stop = word_start + word_duration
-            
-            result.append({
-                'word': word,
-                'start': round(word_start, 2),
-                'end': round(word_stop, 2)
-            })            
+
+            result.append({"word": word, "start": round(word_start, 2), "end": round(word_stop, 2)})
             word_start = word_stop
     return result
 
