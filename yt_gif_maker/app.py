@@ -36,7 +36,7 @@ with tab1:
                 upload_url = st.text_input(label="YouTube / Shorts url", value=st.session_state.upload_url, key="basic_upload", label_visibility="collapsed")
             with st.container(border=True):
                 with colc:
-                    use_whisper = st.checkbox(label="use whisper", value=False)
+                    st.session_state.use_whisper = st.checkbox(label="use whisper", value=False)
                 with colb:
                     st.session_state.model_selection = st.selectbox(
                         label="whisper model",
@@ -154,7 +154,7 @@ with tab2:
                 label="transcribe with whisper",
                 type="secondary",
                 on_click=transcribe_logic,
-                args=(st.session_state.temporary_video_location, st.session_state.model_selection),
+                args=(),
             )
 
     with st.container(border=True):

@@ -70,15 +70,14 @@ def fetch_logic(upload_url: str):
     st.session_state.yt_transcript_words = transcript_words
 
 
-def transcribe_logic(
-    temporary_video_location: str,
-    model_selection: str,
-):
+def transcribe_logic():
     st.session_state.whisper_just_transcript, st.session_state.whisper_transcript_words = transcribe(
-        video_file_path=temporary_video_location, model=model_selection
+        video_file_path=st.session_state.temporary_video_location, model=st.session_state.model_selection
     )
 
 
 def auto_usage(upload_url: str, before_phrase_secs: float, after_phrase_secs: float, resize_factor: float, fps: int) -> None:
     fetch_logic(upload_url)
+    if st.session_state.use_whisper:
+        transcribe_logic()
     clip_and_gif(before_phrase_secs, after_phrase_secs, resize_factor, fps, 1)

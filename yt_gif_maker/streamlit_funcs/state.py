@@ -64,6 +64,8 @@ def init_state():
         st.session_state.resize_factor = default_resize_factor
     if "fps" not in st.session_state:
         st.session_state.fps = default_fps
+    if "use_whisper" not in st.session_state:
+        st.session_state.use_whisper = False
 
 
 def reset_state(upload_url: str):
@@ -84,3 +86,4 @@ def reset_state(upload_url: str):
     st.session_state.after_phrase_secs = default_after_phrase_secs
     st.session_state.resize_factor = default_resize_factor
     st.session_state.fps = default_fps
+    st.session_state.use_whisper = False
