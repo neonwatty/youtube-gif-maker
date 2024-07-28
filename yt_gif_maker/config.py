@@ -16,8 +16,8 @@ default_clip_gif_path = "./data/input/blank.jpg"
 default_recovered_phrase = ""
 default_gif_size = ""
 default_text_on_gif_val = True
-default_before_phrase_secs = 0
-default_after_phrase_secs = 0
+default_before_phrase_secs = 2
+default_after_phrase_secs = 3
 default_resize_factor = 0.2
 default_fps = int(15)
 
