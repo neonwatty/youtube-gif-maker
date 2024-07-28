@@ -58,7 +58,7 @@ def fetch_logic(upload_url: str):
         st.session_state.upload_url = upload_url
         st.session_state.fetch_count = 0
         reset_state(upload_url)
-    elif st.session_state.fetch_count > 0:
+    if st.session_state.fetch_count == 0:
         st.session_state.temporary_video_path = default_temp_video_location()
         download_video(upload_url, st.session_state.temporary_video_path)
         yt_transcript = get_single_transcript(upload_url)
