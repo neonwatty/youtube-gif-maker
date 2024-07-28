@@ -1,4 +1,5 @@
 import uuid
+import tempfile
 
 
 # initial state values
@@ -22,4 +23,5 @@ default_fps = int(15)
 
 
 def default_temp_video_location():
-    return "/original_" + str(uuid.uuid4()) + ".mp4"
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        return tmpdirname + "/original_" + str(uuid.uuid4()) + ".mp4"
