@@ -125,7 +125,7 @@ with tab2:
         with col_orig_video:
             with st.container(border=True):
                 st.caption("original video")
-                st.video(st.session_state.temporary_video_location)
+                st.video(st.session_state.temporary_video_path)
 
     with st.container(border=True):
         st.markdown("#### transcript area")

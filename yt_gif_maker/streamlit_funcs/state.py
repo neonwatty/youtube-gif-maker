@@ -30,8 +30,8 @@ def init_state():
         st.session_state.whisper_transcript_words = default_whisper_transcript_words
     if "whisper_just_transcript" not in st.session_state:
         st.session_state.whisper_just_transcript = default_whisper_just_transcript
-    if "temporary_video_location" not in st.session_state:
-        st.session_state.temporary_video_location = default_clip_video_path
+    if "temporary_video_path" not in st.session_state:
+        st.session_state.temporary_video_path = default_clip_video_path
     if "upload_url" not in st.session_state:
         st.session_state.upload_url = default_upload_url
     if "input_phrase" not in st.session_state:
@@ -66,6 +66,8 @@ def init_state():
         st.session_state.fps = default_fps
     if "use_whisper" not in st.session_state:
         st.session_state.use_whisper = False
+    if "fetch_count" not in st.session_state:
+        st.session_state.fetch_count = 0
 
 
 def reset_state(upload_url: str):
@@ -87,3 +89,4 @@ def reset_state(upload_url: str):
     st.session_state.resize_factor = default_resize_factor
     st.session_state.fps = default_fps
     st.session_state.use_whisper = False
+    st.session_state.fetch_count = 0

@@ -56,18 +56,22 @@ def clip_and_gif(before_phrase_secs: float, after_phrase_secs: float, resize_fac
 def fetch_logic(upload_url: str):
     if upload_url != st.session_state.upload_url:
         st.session_state.upload_url = upload_url
+        st.session_state.fetch_count = 0
         reset_state(upload_url)
-    st.session_state.temporary_video_location = default_temp_video_location()
-    download_video(upload_url, st.session_state.temporary_video_location)
-    yt_transcript = get_single_transcript(upload_url)
+    elif st.session_state.fetch_count > 0:
+        st.session_state.temporary_video_path = default_temp_video_location()
+        download_video(upload_url, st.session_state.temporary_video_path)
+        yt_transcript = get_single_transcript(upload_url)
 
-    st.session_state.yt_transcript_text = yt_transcript
+        st.session_state.yt_transcript_text = yt_transcript
 
-    transcript_text = yt_transcript["transcript"]
-    transcript_words = yt_transcript["transcript_words"]
+        transcript_text = yt_transcript["transcript"]
+        transcript_words = yt_transcript["transcript_words"]
 
-    st.session_state.yt_just_transcript = transcript_text
-    st.session_state.yt_transcript_words = transcript_words
+        st.session_state.yt_just_transcript = transcript_text
+        st.session_state.yt_transcript_words = transcript_words
+        
+        st.session_state.fetch_count += 1
 
 
 def transcribe_logic():
