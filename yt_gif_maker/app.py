@@ -7,9 +7,11 @@ from yt_gif_maker.nearest import get_nearest_snippets
 from yt_gif_maker.gif_maker import make_gif
 from yt_gif_maker.clip import clip_video
 import tempfile
-import uuid
 import io
 import os
+
+from yt_gif_maker.config import default_yt_transcript_words, default_yt_just_transcript, default_whisper_transcript_words, default_whisper_just_transcript, default_upload_url, default_input_phrase, default_whisper_model_selection, default_whisper_model_selection_index, default_clip_video_path, default_clip_gif_path, default_recovered_phrase, default_gif_size, default_text_on_gif_val, default_before_phrase_secs, default_after_phrase_secs, default_resize_factor, default_fps, default_temp_video_location
+
 
 app_name = "YouTube gif maker (advanced)"
 st.set_page_config(page_title=app_name)
@@ -18,48 +20,70 @@ st.title(app_name)
 
 # Initialization
 if "yt_transcript_words" not in st.session_state:
-    st.session_state.yt_transcript_words = None
+    st.session_state.yt_transcript_words = default_yt_transcript_words
 if "yt_just_transcript" not in st.session_state:
-    st.session_state.yt_just_transcript = None
+    st.session_state.yt_just_transcript = default_yt_just_transcript
 if "whisper_transcript_words" not in st.session_state:
-    st.session_state.whisper_transcript_words = None
+    st.session_state.whisper_transcript_words = default_whisper_transcript_words
 if "whisper_just_transcript" not in st.session_state:
-    st.session_state.whisper_just_transcript = None
+    st.session_state.whisper_just_transcript = default_whisper_just_transcript
 if "temporary_video_location" not in st.session_state:
     with tempfile.TemporaryDirectory() as tmpdirname:
-        st.session_state.temporary_video_location = tmpdirname + "/original_" + str(uuid.uuid4()) + ".mp4"
+        st.session_state.temporary_video_location = tmpdirname + default_temp_video_location()
 if "upload_url" not in st.session_state:
-    st.session_state.upload_url = "https://www.youtube.com/watch?v=svX9-fYMIQU"
+    st.session_state.upload_url = default_upload_url
 if "input_phrase" not in st.session_state:
-    if st.session_state.upload_url == "https://www.youtube.com/watch?v=svX9-fYMIQU":
-        st.session_state.input_phrase = "bitches leave"
+    if st.session_state.upload_url == default_upload_url:
+        st.session_state.input_phrase = default_input_phrase
     else:
         st.session_state.input_phrase = ""
 if "model_selection" not in st.session_state:
-    st.session_state.model_selection = "base"
+    st.session_state.model_selection = default_whisper_model_selection
 if "model_selection_index" not in st.session_state:
-    st.session_state.model_selection_index = 1
+    st.session_state.model_selection_index = default_whisper_model_selection_index
 
 if "clip_video_paths" not in st.session_state:
-    st.session_state.clip_video_paths = ["./data/input/blank.mp4"] * 3
+    st.session_state.clip_video_paths = [default_clip_video_path] * 3
 if "clip_gif_paths" not in st.session_state:
-    st.session_state.clip_gif_paths = ["./data/input/blank.jpg"] * 3
+    st.session_state.clip_gif_paths = [default_clip_gif_path] * 3
 if "recovered_phrases" not in st.session_state:
-    st.session_state.recovered_phrases = [""] * 3
+    st.session_state.recovered_phrases = [default_recovered_phrase] * 3
 if "gif_sizes" not in st.session_state:
-    st.session_state.gif_sizes = [""] * 3
+    st.session_state.gif_sizes = [default_gif_size] * 3
 
 if "text_on_gif_val" not in st.session_state:
-    st.session_state.text_on_gif_val = True
+    st.session_state.text_on_gif_val = default_text_on_gif_val
 
 if "before_phrase_secs" not in st.session_state:
-    st.session_state.before_phrase_secs = 0
+    st.session_state.before_phrase_secs = default_before_phrase_secs
 if "after_phrase_secs" not in st.session_state:
-    st.session_state.after_phrase_secs = 0
+    st.session_state.after_phrase_secs = default_after_phrase_secs
 if "resize_factor" not in st.session_state:
-    st.session_state.resize_factor = 1.0
+    st.session_state.resize_factor = default_resize_factor
 if "fps" not in st.session_state:
-    st.session_state.fps = int(25)
+    st.session_state.fps = default_fps
+    
+
+def reset_state(upload_url: str):
+    st.session_state.yt_transcript_words = default_yt_transcript_words
+    st.session_state.yt_just_transcript = default_yt_just_transcript
+    st.session_state.whisper_transcript_words = default_whisper_transcript_words
+    st.session_state.whisper_just_transcript = default_whisper_just_transcript
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        st.session_state.temporary_video_location = tmpdirname + default_temp_video_location()
+    st.session_state.upload_url = upload_url
+    st.session_state.input_phrase = ""
+    st.session_state.model_selection = default_whisper_model_selection
+    st.session_state.model_selection_index = default_whisper_model_selection_index
+    st.session_state.clip_video_paths = [default_clip_video_path] * 3
+    st.session_state.clip_gif_paths = [default_clip_gif_path] * 3
+    st.session_state.recovered_phrases = [default_recovered_phrase] * 3
+    st.session_state.gif_sizes = [default_gif_size] * 3
+    st.session_state.text_on_gif_val = default_text_on_gif_val
+    st.session_state.before_phrase_secs = default_before_phrase_secs
+    st.session_state.after_phrase_secs = default_after_phrase_secs
+    st.session_state.resize_factor = default_resize_factor
+    st.session_state.fps = default_fps
 
 
 def clip_temp_videos(temporary_video_path: str, before_phrase_secs: float, after_phrase_secs: float, resize_factor: float, fps: int) -> None:
@@ -104,6 +128,9 @@ def clip_temp_videos(temporary_video_path: str, before_phrase_secs: float, after
 
 
 def fetch_logic(upload_url: str, temporary_video_location: str):
+    if upload_url != st.session_state.upload_url:
+        st.session_state.upload_url = upload_url
+        reset_state(upload_url)
     download_video(upload_url, temporary_video_location)
     filename = open(temporary_video_location, "rb")
     byte_file = io.BytesIO(filename.read())
@@ -154,12 +181,12 @@ with tab1:
     with st.container(border=True):
         with st.container(border=True):
             st.markdown("#### upload area")
-            st.session_state.upload_url = st.text_input(label="YouTube / Shorts url", value=st.session_state.upload_url)
+            upload_url = st.text_input(label="YouTube / Shorts url", value=st.session_state.upload_url)
             yt_fetch_button = st.button(
                 label="fetch video",
                 type="secondary",
                 on_click=fetch_logic,
-                args=(st.session_state.upload_url, st.session_state.temporary_video_location),
+                args=(upload_url, st.session_state.temporary_video_location),
             )
 
         col_video_empty_1, col_orig_video, col_video_empty_2 = st.columns([4, 8, 4])
@@ -196,26 +223,30 @@ with tab1:
 
     with st.container(border=True):
         st.markdown("#### clip / gif maker area")
-        st.session_state.input_phrase = st.text_input(
-            label="input phrase", placeholder="enter in the input phrase you'd like gif-a-fied", value=st.session_state.input_phrase, max_chars=34
-        )
-        (
-            clip_button_col,
-            clip_button_check,
-            clip_button_time_before_buffer,
-            clip_button_time_after_buffer,
-            clip_button_resize_factor,
-            clip_button_fps,
-        ) = st.columns([1, 1, 1, 1, 1, 1])
+        
+        with st.container(border=True):
+            clip_input_col, clip_button_col, clip_button_check = st.columns([2, 1, 2])
+        
+        with clip_input_col:
+            st.session_state.input_phrase = st.text_input(
+                label="input phrase", placeholder="enter in the input phrase you'd like gif-a-fied", value=st.session_state.input_phrase, max_chars=34, label_visibility="collapsed"
+            )
+        with st.container(border=True):
+            (
+                clip_button_time_before_buffer,
+                clip_button_time_after_buffer,
+                clip_button_resize_factor,
+                clip_button_fps,
+            ) = st.columns([1, 1, 1, 1])
         with clip_button_check:
             st.session_state.text_on_gif_val = st.checkbox("show input phrase on gif", value=st.session_state.text_on_gif_val)
         with clip_button_time_before_buffer:
             before_phrase_secs = st.number_input(
-                "include before input_phrase (in seconds)", value=st.session_state.before_phrase_secs, min_value=0, max_value=5
+                "include before (secs)", value=st.session_state.before_phrase_secs, min_value=0, max_value=5
             )
         with clip_button_time_after_buffer:
             after_phrase_secs = st.number_input(
-                "include after input_phrase (in seconds)", value=st.session_state.after_phrase_secs, min_value=0, max_value=5
+                "include after (secs)", value=st.session_state.after_phrase_secs, min_value=0, max_value=5
             )
         with clip_button_resize_factor:
             resize_factor = st.number_input("gif resize factor", value=st.session_state.resize_factor, min_value=0.1, max_value=1.0)
