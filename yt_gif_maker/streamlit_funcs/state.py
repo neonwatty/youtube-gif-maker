@@ -68,6 +68,10 @@ def init_state():
         st.session_state.use_whisper = False
     if "fetch_count" not in st.session_state:
         st.session_state.fetch_count = 0
+    if "transcribe_count" not in st.session_state:
+        st.session_state.transcribe_count = 0
+    if "gif_expander" not in st.session_state:
+        st.session_state.gif_expander = False
 
 
 def reset_state(upload_url: str):
@@ -75,18 +79,12 @@ def reset_state(upload_url: str):
     st.session_state.yt_just_transcript = default_yt_just_transcript
     st.session_state.whisper_transcript_words = default_whisper_transcript_words
     st.session_state.whisper_just_transcript = default_whisper_just_transcript
-    st.session_state.upload_url = upload_url
-    st.session_state.input_phrase = ""
     st.session_state.model_selection = default_whisper_model_selection
     st.session_state.model_selection_index = default_whisper_model_selection_index
     st.session_state.clip_video_paths = [default_clip_video_path] * 3
     st.session_state.clip_gif_paths = [default_clip_gif_path] * 3
     st.session_state.recovered_phrases = [default_recovered_phrase] * 3
     st.session_state.gif_sizes = [default_gif_size] * 3
-    st.session_state.text_on_gif_val = default_text_on_gif_val
-    st.session_state.before_phrase_secs = default_before_phrase_secs
-    st.session_state.after_phrase_secs = default_after_phrase_secs
-    st.session_state.resize_factor = default_resize_factor
-    st.session_state.fps = default_fps
-    st.session_state.use_whisper = False
     st.session_state.fetch_count = 0
+    st.session_state.transcribe_count = 0
+    st.session_state.gif_expander = False
