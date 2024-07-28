@@ -33,7 +33,9 @@ with tab1:
             st.markdown("##### Enter url / line to gif / choose transcriber")
             cola, colb, colc = st.columns([6, 2, 2])
             with cola:
-                upload_url = st.text_input(label="YouTube / Shorts url", value=st.session_state.upload_url, key="basic_upload", label_visibility="collapsed")
+                upload_url = st.text_input(
+                    label="YouTube / Shorts url", value=st.session_state.upload_url, key="basic_upload", label_visibility="collapsed"
+                )
             with st.container(border=True):
                 with colc:
                     st.session_state.use_whisper = st.checkbox(label="use whisper", value=False)
@@ -49,8 +51,8 @@ with tab1:
                     st.session_state.model_selection_index = avaliable_models.index(model_selection)
                     if st.session_state.model_selection != model_selection:
                         st.session_state.transcribe_count = 0
-                        st.session_state.model_selection = model_selection                    
-                    
+                        st.session_state.model_selection = model_selection
+
             clip_input_col, clip_button_check = st.columns([3, 2])
             clip_button_col, emptya = st.columns([5, 1])
 
@@ -61,7 +63,7 @@ with tab1:
                     value=st.session_state.input_phrase,
                     max_chars=34,
                     label_visibility="collapsed",
-                    key="auto_input_phrase"
+                    key="auto_input_phrase",
                 )
             with st.expander(label="gif size options"):
                 with st.container(border=True):
@@ -72,13 +74,21 @@ with tab1:
                         clip_button_fps,
                     ) = st.columns([1, 1, 1, 1])
                 with clip_button_check:
-                    st.session_state.text_on_gif_val = st.checkbox("show input phrase on gif", value=st.session_state.text_on_gif_val, key="auto_text_on_gif_checkbox")
+                    st.session_state.text_on_gif_val = st.checkbox(
+                        "show input phrase on gif", value=st.session_state.text_on_gif_val, key="auto_text_on_gif_checkbox"
+                    )
                 with clip_button_time_before_buffer:
-                    before_phrase_secs = st.number_input("include before (secs)", value=st.session_state.before_phrase_secs, min_value=0, max_value=20, key="auto_before_phrase_secs")
+                    before_phrase_secs = st.number_input(
+                        "include before (secs)", value=st.session_state.before_phrase_secs, min_value=0, max_value=20, key="auto_before_phrase_secs"
+                    )
                 with clip_button_time_after_buffer:
-                    after_phrase_secs = st.number_input("include after (secs)", value=st.session_state.after_phrase_secs, min_value=0, max_value=20, key="auto_after_phrase_secs")
+                    after_phrase_secs = st.number_input(
+                        "include after (secs)", value=st.session_state.after_phrase_secs, min_value=0, max_value=20, key="auto_after_phrase_secs"
+                    )
                 with clip_button_resize_factor:
-                    resize_factor = st.number_input("gif resize factor", value=st.session_state.resize_factor, min_value=0.1, max_value=1.0, key="auto_resize_factor")
+                    resize_factor = st.number_input(
+                        "gif resize factor", value=st.session_state.resize_factor, min_value=0.1, max_value=1.0, key="auto_resize_factor"
+                    )
                 with clip_button_fps:
                     fps = st.number_input("gif fps", value=st.session_state.fps, min_value=10, max_value=60, key="auto_fps")
 
@@ -88,7 +98,7 @@ with tab1:
                         type="primary",
                         on_click=auto_usage,
                         args=(upload_url, before_phrase_secs, after_phrase_secs, resize_factor, fps),
-                        key="auto_clip_button"
+                        key="auto_clip_button",
                     )
 
             with st.expander(label="output gif", expanded=st.session_state.gif_expander):
@@ -100,15 +110,17 @@ with tab1:
 
                     with open(st.session_state.clip_gif_paths[0], "rb") as file:
                         btn = st.download_button(
-                            label="download gif", data=file, file_name=f"{st.session_state.input_phrase}.gif", mime="image/gif", key="auto_gif_download", type="primary"
+                            label="download gif",
+                            data=file,
+                            file_name=f"{st.session_state.input_phrase}.gif",
+                            mime="image/gif",
+                            key="auto_gif_download",
+                            type="primary",
                         )
 
                     with st.container(border=True):
                         st.markdown("#### raw video clip")
                         st.video(st.session_state.clip_video_paths[0])
-
-
-
 
 
 ### advanced tab ###
@@ -121,7 +133,7 @@ with tab2:
                 label="fetch video",
                 type="secondary",
                 on_click=fetch_logic,
-                args=(upload_url, ),
+                args=(upload_url,),
             )
 
         col_video_empty_1, col_orig_video, col_video_empty_2 = st.columns([4, 8, 4])
@@ -146,7 +158,7 @@ with tab2:
                 placeholder="Whisper transcript will appear here if you make it",
                 label="Whisper transcript",
             )
-            
+
             model_selection = st.selectbox(
                 label="whisper model (base only in HF space)",
                 index=st.session_state.model_selection_index,
@@ -155,7 +167,7 @@ with tab2:
             st.session_state.model_selection_index = avaliable_models.index(model_selection)
             if st.session_state.model_selection != model_selection:
                 st.session_state.transcribe_count = 0
-                st.session_state.model_selection = model_selection           
+                st.session_state.model_selection = model_selection
 
             trans_button_val = st.button(
                 label="transcribe with whisper",
