@@ -43,7 +43,7 @@ with tab1:
                         index=st.session_state.model_selection_index,
                         options=avaliable_models,
                         key="auto_model",
-                        disabled=False if use_whisper else True,
+                        disabled=False if st.session_state.use_whisper else True,
                         label_visibility="collapsed",
                     )
             clip_input_col, clip_button_check = st.columns([2, 2])
@@ -81,8 +81,8 @@ with tab1:
                     clip_button_val = st.button(
                         label="create gif",
                         type="primary",
-                        on_click=clip_and_gif,
-                        args=(before_phrase_secs, after_phrase_secs, resize_factor, fps, 1),
+                        on_click=auto_usage,
+                        args=(upload_url, before_phrase_secs, after_phrase_secs, resize_factor, fps),
                         key="auto_clip_button"
                     )
 
