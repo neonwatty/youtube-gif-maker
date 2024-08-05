@@ -4,8 +4,6 @@ from yt_gif_maker.gif_maker import clip_video_and_gif, draw_on_gif
 
 
 def process():
-    # video_file_path = "data/input/bleep_test_1.mp4"
-    # query = "every time we to go costa rica"
     video_file_path = "fury.mp4"
     query = "fang it fang it"
     transcript, timestamped_words = transcribe(video_file_path, model="base")
