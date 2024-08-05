@@ -1,5 +1,3 @@
-[![Python application](https://github.com/neonwatty/ytdatakit/actions/workflows/python-app.yml/badge.svg)](https://github.com/neonwatty/yt-gif-maker/actions/workflows/python-app.yml/python-app.yml)
-
 # YouTube gif maker
 
 Easily make GIFs of your favorite YouTube moments.

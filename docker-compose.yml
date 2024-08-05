@@ -1,6 +1,8 @@
 services:
   yt_gif_maker:
-    image: ghcr.io/neonwatty/yt_gif_maker:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: yt_gif_maker
     ports:
       - 8502:8502
