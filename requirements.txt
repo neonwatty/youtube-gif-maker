@@ -6,4 +6,5 @@ pillow
 torch
 transformers
 sentence-transformers
+youtube-transcript-api
 streamlit

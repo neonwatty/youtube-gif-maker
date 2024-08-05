@@ -1,0 +1,8 @@
+services:
+  yt_gif_maker:
+    image: ghcr.io/neonwatty/yt_gif_maker:latest
+    container_name: yt_gif_maker
+    ports:
+      - 8502:8502
+    volumes:
+      - ./data:/home/data
