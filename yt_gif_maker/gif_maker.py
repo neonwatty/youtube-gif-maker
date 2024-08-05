@@ -79,7 +79,7 @@ def draw_text_on_gif(input_gif_path, output_gif_path, input_phrase):
                 for line in lines:
                     text_width, line_height = textsize(line, font=font)
                     x = (width - text_width) / 2
-                    
+
                     # Define outline width
                     outline_width = 1
 
@@ -89,7 +89,7 @@ def draw_text_on_gif(input_gif_path, output_gif_path, input_phrase):
                         draw.text((x - offset, y), line, font=font, fill="black")
                         draw.text((x, y + offset), line, font=font, fill="black")
                         draw.text((x, y - offset), line, font=font, fill="black")
-                    
+
                     draw.text((x, y), line, font=font, fill="white")
                     y += line_height
 

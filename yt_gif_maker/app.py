@@ -35,7 +35,11 @@ with tab2:
             cola, colb, colc = st.columns([6, 2, 2])
             with cola:
                 upload_url = st.text_input(
-                    label="YouTube / Shorts url", value=st.session_state.upload_url, key="basic_upload", label_visibility="collapsed", placeholder="place youtube url here"
+                    label="YouTube / Shorts url",
+                    value=st.session_state.upload_url,
+                    key="basic_upload",
+                    label_visibility="collapsed",
+                    placeholder="place youtube url here",
                 )
             with st.container(border=True):
                 with colc:

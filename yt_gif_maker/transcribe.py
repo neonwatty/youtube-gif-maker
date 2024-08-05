@@ -3,7 +3,8 @@ import whisper_timestamped as whisper
 from typing import Tuple
 import itertools
 import os
-os.environ['TOKENIZERS_PARALLELISM'] = 'true'
+
+os.environ["TOKENIZERS_PARALLELISM"] = "true"
 
 
 avaliable_models = ["tiny", "base", "small", "medium", "large-v3"]
