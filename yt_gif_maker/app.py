@@ -10,31 +10,32 @@ st.title(app_name)
 
 init_state()
 
+st.markdown("###### Run this app locally by pulling [the official repo](https://github.com/neonwatty/yt-gif-maker)")
 
-tab1, tab2, tab3 = st.tabs(["YouTube gif maker", "Advanced", "💡 About"])
 
-with tab3:
+tab1, tab2, tab3 = st.tabs(["💡 About", "🎞️ YouTube gif maker", "🧪 Advanced"])
+
+with tab1:
     st.markdown(
-        "### Make a gif of a one liner from any a YouTube video.  \n"
+        "### Easily make GIFs of your favorite YouTube moments.  \n"
         "How it works: \n\n"
         "1.  Provided a youtube / shorts url \n"
         "2.  Enter in the phrase you want to gif-afy \n"
-        "3.  (if running locally) Choose a model from the Whisper family to transcribe the audio (defaults to base only for HF space) \n"
-        "4.  (optional) Press 'just transcribe' to examine / download just the transcription of the video (can help in choosing bleep words) \n"
-        "5.  Press 'transcribe & clip' to transcribe and recover clips relevant to your input phrase \n"
-        "6.  Click the 'gif-this' button next to the clip you want to gif-afy \n"
-        "If you want to select your Whisper model / run longer videos pull and run the app locally. \n\n"
-        "You do *not* need a GPU to run this locally.  Larger models take more time to process locally, but its doable. \n"
+        "3.  Click the 'create gif' button to make your gif! \n\n"
+        "`gif size options` lets you adjust your gif capture timeframe and size. \n\n"
+        "If you want to select your Whisper model / process longer videos quickly pull and [run the app locally](https://github.com/neonwatty/yt-gif-maker). \n\n"
+        "app usage is illustrated in the gif below. \n \n"
+        "![yt gif maker](https://github.com/neonwatty/readme_gifs/blob/main/yt_gif_maker.gif?raw=true)"
     )
 
-with tab1:
+with tab2:
     with st.container(border=True):
         with st.container(border=True):
             st.markdown("##### Enter url / line to gif / choose transcriber")
             cola, colb, colc = st.columns([6, 2, 2])
             with cola:
                 upload_url = st.text_input(
-                    label="YouTube / Shorts url", value=st.session_state.upload_url, key="basic_upload", label_visibility="collapsed"
+                    label="YouTube / Shorts url", value=st.session_state.upload_url, key="basic_upload", label_visibility="collapsed", placeholder="place youtube url here"
                 )
             with st.container(border=True):
                 with colc:
@@ -59,7 +60,7 @@ with tab1:
             with clip_input_col:
                 st.session_state.input_phrase = st.text_input(
                     label="input phrase",
-                    placeholder="enter in the input phrase you'd like gif-a-fied",
+                    placeholder="enter moment phrase you'd like gif-a-fied here",
                     value=st.session_state.input_phrase,
                     max_chars=34,
                     label_visibility="collapsed",
@@ -123,8 +124,7 @@ with tab1:
                         st.video(st.session_state.clip_video_paths[0])
 
 
-### advanced tab ###
-with tab2:
+with tab3:
     with st.container(border=True):
         with st.container(border=True):
             st.markdown("#### upload area")
