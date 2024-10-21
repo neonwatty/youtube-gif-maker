@@ -10,12 +10,9 @@ st.title(app_name)
 
 init_state()
 
-st.markdown("###### Run this app locally by pulling [the official repo](https://github.com/neonwatty/yt-gif-maker)")
+tab1, tab2, tab3 = st.tabs(["🎞️ YouTube gif maker", "🧪 Advanced", "💡 About"])
 
-
-tab1, tab2, tab3 = st.tabs(["💡 About", "🎞️ YouTube gif maker", "🧪 Advanced"])
-
-with tab1:
+with tab3:
     st.markdown(
         "### Easily make GIFs of your favorite YouTube moments.  \n"
         "How it works: \n\n"
@@ -28,7 +25,7 @@ with tab1:
         "![yt gif maker](https://github.com/neonwatty/readme_gifs/blob/main/yt_gif_maker.gif?raw=true)"
     )
 
-with tab2:
+with tab1:
     with st.container(border=True):
         with st.container(border=True):
             st.markdown("##### Enter url / line to gif / choose transcriber")
@@ -128,7 +125,7 @@ with tab2:
                         st.video(st.session_state.clip_video_paths[0])
 
 
-with tab3:
+with tab2:
     with st.container(border=True):
         with st.container(border=True):
             st.markdown("#### upload area")
@@ -164,7 +161,7 @@ with tab3:
             )
 
             model_selection = st.selectbox(
-                label="whisper model (base only in HF space)",
+                label="whisper model",
                 index=st.session_state.model_selection_index,
                 options=avaliable_models,
             )

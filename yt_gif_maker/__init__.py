@@ -5,6 +5,6 @@ main_dir = os.path.dirname(base_dir)
 
 import whisper_timestamped as whisper
 
-# download weights for basic models
-model = whisper.load_model("tiny", device="cpu")
-model = whisper.load_model("base", device="cpu")
+# pre download weights for basic models
+# model = whisper.load_model("tiny", device="cpu")
+# model = whisper.load_model("base", device="cpu")
