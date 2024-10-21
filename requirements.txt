@@ -1,4 +1,5 @@
 whisper-timestamped
+openai-whisper==20240927
 moviepy
 yt-dlp
 numpy
