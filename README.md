@@ -17,9 +17,19 @@ To use the app
 
 After creation you can manually adjust, trim, or extend the length of your gif.
 
-<p align="center">
+Here's a brief gif showing how easy it is to create gifs using the app.
+
+<div align="center">
 <img align="center" src="https://github.com/jermwatt/readme_gifs/blob/main/yt_gif_maker.gif" height="325">
-</p>
+</div>
+
+And here are a few gifs made using the app
+
+<div align="center">
+<img src="https://github.com/jermwatt/readme_gifs/blob/main/yt-gify-example-0.gif" height="325">
+<img src="https://github.com/jermwatt/readme_gifs/blob/main/yt-gify-example-1.gif" height="325">
+<img src="https://github.com/jermwatt/readme_gifs/blob/main/yt-gify-example-2.gif" height="325">
+</div>
 
 ## Install and run the app using Python
 
