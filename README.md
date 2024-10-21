@@ -2,10 +2,6 @@
 
 Easily make and share GIFs of your favorite YouTube moments.
 
-<p align="center">
-<img align="center" src="https://github.com/jermwatt/readme_gifs/blob/main/yt_gif_maker.gif" height="325">
-</p>
-
 - [Using the app](#using-the-app)
 - [Install and run the app using Python](#install-and-run-the-app-using-python)
 - [Install and run the app using Docker](#install-and-run-the-app-using-docker)
@@ -20,6 +16,10 @@ To use the app
 3.  Click the 'create gif' button to create your gif, download, and share!
 
 After creation you can manually adjust, trim, or extend the length of your gif.
+
+<p align="center">
+<img align="center" src="https://github.com/jermwatt/readme_gifs/blob/main/yt_gif_maker.gif" height="325">
+</p>
 
 ## Install and run the app using Python
 
