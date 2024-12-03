@@ -1,6 +1,4 @@
-# YouTube gif maker
-
-Easily make and share GIFs of your favorite YouTube moments.
+# Easily make and share GIFs of your favorite YouTube moments using Python and AI.
 
 - [Using the app](#using-the-app)
 - [Install and run the app using Python](#install-and-run-the-app-using-python)
