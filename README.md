@@ -1,5 +1,7 @@
 # Easily make and share GIFs of your favorite YouTube moments using Python and AI.
 
+> For the same experience built as a browser extension, see [YTgify for Chrome](https://github.com/ytgify/ytgify) or [YTgify for Firefox](https://github.com/ytgify/ytgify-firefox).
+
 - [Using the app](#using-the-app)
 - [Install and run the app using Python](#install-and-run-the-app-using-python)
 - [Install and run the app using Docker](#install-and-run-the-app-using-docker)
